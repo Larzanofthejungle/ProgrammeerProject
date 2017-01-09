@@ -30,8 +30,35 @@ Er zou ook gewerkt kunnen worden met selecties. Bijvoorbeeld dat er alleen gekek
 
 Het aantal dagen dat een festival duurt is makkelijk te scrapen, echter het zou voor de visualisatie mooier zijn om hier een onderscheid van de verschillende muzieksoorten te kunnen maken.
 
-Of als het mogelijk is ook hier selecties op toepassen, zodat je kan switchen tussen de weergave van de duur van een festival, muzieksoort en bijvoorbeeld gratis entree of niet. 
+Of als het mogelijk is ook hier selecties op toepassen, zodat je kan switchen tussen de weergave van de duur van een festival, muzieksoort en bijvoorbeeld gratis entree of niet.
 
 ### Extra interactie
 
-Door op een festival te klikken zou je een geschiedenis kunnen laten zien. Als in het bezoekersaantal door de jaren heen of ticketprijs. Ticketprijs is hierbij nog wel goed op te zoeken, bezoekersaantal is echter niet voor alle evenementen inzichtelijk.
+Door op een festival te klikken zou je een geschiedenis kunnen laten zien. Bijvoorbeeld in het bezoekersaantal door de jaren heen of de ticketprijs per jaar. Ticketprijs is hierbij nog wel goed op te zoeken, bezoekersaantal is echter niet voor alle evenementen inzichtelijk.
+
+## Onderdelen
+
+### Noodzakelijk
+
+* Data scrapen en op een handige manier opslaan.
+* SVG map van Nederland implementeren (al gevonden)
+* Festivals op de juiste positie op de map plaatsen.
+* Staafdiagram maken.
+* Cirkeldiagram maken.
+* Met slider visualisatie updaten.
+* Achtergrondinformatie van festivals weergeven.
+  * Bij hover een popup met korte omschrijving.
+
+### Optioneel
+
+* Meerdere festivals op dezelfde positie duidelijk maken.
+* Afspeelknop voor automatische weergave.
+* Bij het jaar 2000 duidelijk maken wanneer festivals zijn opgericht.
+* Achtergrondinformatie van festivals weergeven.
+  * Trendlijn van bezoekersaantal/ticketprijs.
+* Selecties maken op basis van:
+  * Grootte festival
+  * Provincie
+  * Kosten festival
+  * Soort muziek
+  * Duur festival

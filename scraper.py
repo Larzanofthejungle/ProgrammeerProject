@@ -4,7 +4,6 @@
 '''
 This script scrapes IMDB and outputs a CSV file with highest rated tv series.
 '''
-import csv
 
 from pattern.web import URL, DOM
 
@@ -20,6 +19,8 @@ BACKUP_HTML = 'festivals.html'
 
 def extract_festivals(dom):
 
+    festivals = []
+
     # gets list of div tags lister-item-content
     for festival in dom.by_tag("section.festival_rows_info  "):
         for name in festival.by_tag("div.td_1 last"):
@@ -32,22 +33,34 @@ def extract_festivals(dom):
         for duration in festival.by_tag("div.td_3 last"):
             duration = duration.content
         if place != False:
-            print name, place, duration
-    return True
+            festival_info = "{\"name\":\"" + name + "\", \"place\":\"" + place + "\", \"duration\":\"" + duration + "\"}"
+            festivals.append(festival_info)
+    return ',\n\t\t\t'.join(festivals)
 
 if __name__ == '__main__':
 
+    festivals_total = []
+
     for year in range(YEAR_RANGE):
+
+        print BEGIN_YEAR + year
+        festivals_year = []
+
         for month in range(MONTH_RANGE):
             current_page = URL_FRONT + str(BEGIN_MONTH + month).zfill(2) + URL_MID + str(BEGIN_YEAR + year)
             url = URL(current_page)
             html = url.download()
 
-            with open(BACKUP_HTML, 'wb') as f:
-                f.write(html)
-
             # Parse the HTML file into a DOM representation
             dom = DOM(html)
 
             # Extract the festivals
-            extract_festivals(dom)
+            festivals_month = "{\"" + str(BEGIN_MONTH + month).zfill(2) + "\":" + extract_festivals(dom) + "}"
+            festivals_year.append(festivals_month)
+
+        festivals_year = "{\"" + str(BEGIN_YEAR + year) + "\":" + ',\n\t\t'.join(festivals_year) + "}"
+        festivals_total.append(festivals_year)
+
+    with open(OUTPUT_JS,'wb') as output_file:
+        output = "var festivals_total = " + ',\n\t'.join(festivals_total)
+        output_file.write(output.encode('utf-8', 'ignore'))

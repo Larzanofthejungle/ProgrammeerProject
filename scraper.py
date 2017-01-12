@@ -35,7 +35,7 @@ def extract_festivals(dom):
         if place != False:
             festival_info = "{\"name\":\"" + name + "\", \"place\":\"" + place + "\", \"duration\":\"" + duration + "\"}"
             festivals.append(festival_info)
-    return ',\n\t\t\t'.join(festivals)
+    return '[' + ',\n\t\t\t'.join(festivals) + ']'
 
 if __name__ == '__main__':
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
             festivals_month = "{\"" + str(BEGIN_MONTH + month).zfill(2) + "\":" + extract_festivals(dom) + "}"
             festivals_year.append(festivals_month)
 
-        festivals_year = "{\"" + str(BEGIN_YEAR + year) + "\":" + ',\n\t\t'.join(festivals_year) + "}"
+        festivals_year = "{\"" + str(BEGIN_YEAR + year) + "\":[" + ',\n\t\t'.join(festivals_year) + "]}"
         festivals_total.append(festivals_year)
 
     with open(OUTPUT_JS,'wb') as output_file:

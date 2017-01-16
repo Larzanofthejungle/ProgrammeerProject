@@ -1,6 +1,0 @@
-#container {height: 770px; width:1300px; font-size: 0;}
-#map, #barchart, #piechart, #charts {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px;}
-#map {height: 730px; width: 650px;}
-#charts {height: 730px; width: 650px;}
-#barchart {height: 365px; width: 650px;}
-#piechart {height: 365px; width: 650px;}

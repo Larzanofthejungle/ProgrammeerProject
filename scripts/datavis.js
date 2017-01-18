@@ -1,23 +1,3 @@
-d3.xml('nederland.svg', 'image/svg+xml', function(error, xml) {
-	if (error) throw error;
-	document.getElementById('map').appendChild(xml.documentElement);
-});
-
-// https://github.com/wbkd/d3-extended
-d3.selection.prototype.moveToFront = function() {
-	return this.each(function(){
-		this.parentNode.appendChild(this);
-	});
-};
-d3.selection.prototype.moveToBack = function() {
-		return this.each(function() {
-				var firstChild = this.parentNode.firstChild;
-				if (firstChild) {
-						this.parentNode.insertBefore(this, firstChild);
-				}
-		});
-};
-
 var g = d3.select("svg").append("svg").attr("id", "circles")
 
 var mapWidth = 612;
@@ -53,68 +33,70 @@ g.selectAll("g")
 		.attr("cx", function(d) {return convertGeoToPixel(d.lat,d.long).x;})
 		.attr("cy", function(d) {return convertGeoToPixel(d.lat,d.long).y;});
 
-d3.select("svg#svg").moveToBack()
-d3.selectAll("circle").moveToFront()
+var current_year = 2000;
+var year = current_year - 2000;
 
-var margin = {top: 20, right: 0, bottom: 130, left: 50},
-		width = 650 - margin.left - margin.right,
-		height = 375 - margin.top - margin.bottom;
+var festivaldata = [];
 
-var x = d3.scale.ordinal()
-		.rangeRoundBands([0, width]);
+for (var i = 0; i < 12; i = i + 1) {
+		festivaldata = festivaldata.concat(festivals_total[year][current_year][i][i]);
+};
 
-var y = d3.scale.linear()
-		.range([height, 0]);
+console.log(festivaldata)
+
+bardata = d3.values(festivals_total[year])[0].map(function(d) { return {
+			  month: d3.keys(d)[0],
+				festivals: d3.values(d)[0].length
+		};
+});
+
+var margin = {top: 20, right: 0, bottom: 50, left: 50},
+		width = 800 - margin.left - margin.right,
+		height = 375 - margin.top - margin.bottom,
+		barMargin = 5;
+
+var x = d3.time.scale()
+    .domain([new Date(2012, 0, 1), new Date(2012, 11, 31)])
+    .range([0, width]);
+
+var y = d3.scale.linear().range([height, 0])
+		.domain([0, d3.max(bardata, function(d) { return d.festivals; })])
 
 var xAxis = d3.svg.axis()
-		.scale(x)
-		.orient("bottom");
+    .scale(x)
+    .orient("bottom")
+    .ticks(d3.time.months)
+    .tickSize(14, 0)
+    .tickFormat(d3.time.format("%B"));
 
 var yAxis = d3.svg.axis()
 		.scale(y)
 		.orient("left");
 
-var chart = d3.select(".chart")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
+var barchart = d3.select("svg#barchart")
 	.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var year = "2000";
+var barWidth = width / bardata.length;
 
-console.log(festivals_total);
-console.log(festivals_total[0]);
-console.log(d3.keys(festivals_total));
-console.log(d3.keys(festivals_total[0]));
-console.log(d3.values(festivals_total));
-console.log(d3.values(festivals_total[0]));
-console.log(d3.entries(festivals_total));
-console.log(d3.entries(festivals_total[0]));
+barchart.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis)
+  .selectAll(".tick text")
+    .style("text-anchor", "start")
+    .attr("x", 6)
+    .attr("y", 6);
 
-
-
-var barWidth = width / data.length;
-
-chart.append("g")
-		.attr("class", "x axis")
-		.attr("transform", "translate(0," + height + ")")
-		.call(xAxis)
-	.selectAll("text")
-		.attr("y", 0)
-		.attr("x", -10)
-		.attr("dy", ".35em")
-		.attr("transform", "rotate(270)")
-		.style("text-anchor", "end");
-
-chart.append("g")
+barchart.append("g")
 		.attr("class", "y axis")
 		.call(yAxis);
 
-chart.selectAll(".bar")
-		.data(data)
+barchart.selectAll(".bar")
+		.data(bardata)
 	.enter().append("rect")
 		.attr("class", "bar")
-		.attr("x", function(d) { return x(d.state); })
-		.attr("y", function(d) { return y(d.murder); })
-		.attr("height", function(d) { return height - y(d.murder); })
-		.attr("width", x.rangeBand());
+		.attr("x", function(d) { return x(new Date(2012, d.month, 1)) + barMargin; })
+		.attr("y", function(d) { return y(d.festivals); })
+		.attr("height", function(d) { return height - y(d.festivals); })
+		.attr("width", barWidth - (2 * barMargin));

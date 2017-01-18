@@ -2,6 +2,16 @@
 <!-- (c) ammap.com | SVG map of Netherlands - High -->
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
 	<defs>
+		<style type="text/css">
+			.land
+			{
+				fill: #CCCCCC;
+				fill-opacity: 1;
+				stroke:white;
+				stroke-opacity: 1;
+				stroke-width:0.5;
+			}
+		</style>
 
 		<amcharts:ammap projection="mercator" leftLongitude="3.359403" topLatitude="53.560406" rightLongitude="7.227496" bottomLatitude="50.750938"></amcharts:ammap>
 

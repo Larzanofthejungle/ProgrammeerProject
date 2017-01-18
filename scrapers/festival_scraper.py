@@ -55,7 +55,7 @@ if __name__ == '__main__':
         festivals_year = []
 
         for month in range(MONTH_RANGE):
-            current_page = URL_FRONT + str(BEGIN_MONTH + month).zfill(2) + URL_MID + str(BEGIN_YEAR + year)
+            current_page = URL_FRONT + str(BEGIN_MONTH + month - 1) + URL_MID + str(BEGIN_YEAR + year)
             url = URL(current_page)
             html = url.download()
 

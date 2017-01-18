@@ -28,4 +28,10 @@ Alle datasets zijn klaar voor het kunnen maken van de visualisaties. Grootste pu
 
 ## dag 2
 
-Plaatsen worden nu op de juiste positie geplaatst, echter bevinden ze zich achter de map. 
+Plaatsen worden nu op de juiste positie geplaatst, echter bevinden ze zich achter de map.
+
+## dag 3
+
+De SVG map wordt nu ingeladen als achtergrond afbeelding. Het gebruik van de SVG elementen van deze kaart is namelijk (voor nu) niet nodig, doordat met een projectie te plaatsen gepositioneerd worden en die afgestemd is op de breedte en hoogte van de afbeelding.  
+
+Verder is de kolomdiagram ook geimplementeerd en laat al de juiste data zien van een bepaald jaar.

@@ -25,3 +25,7 @@ Scraper voor festivals is af. En festival data kan worden ingelezen.
 ## dag 1
 
 Alle datasets zijn klaar voor het kunnen maken van de visualisaties. Grootste punt nu is het punten weergeven op de kaart.
+
+## dag 2
+
+Plaatsen worden nu op de juiste positie geplaatst, echter bevinden ze zich achter de map. 

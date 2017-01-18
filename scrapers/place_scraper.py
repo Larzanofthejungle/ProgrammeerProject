@@ -12,7 +12,7 @@ with open(INPUT_CSV,'rb') as input_file:
     for row in postcodes:
         if current_place != row[8]:
             current_place = row[8]
-            place_info = "{\"place\":\"" + row[8] + "\", \"province\":\"" + row[10] + "\", \"lat\":\"" + row[11] + "\", \"long\":\"" + row[12] + "\"}"
+            place_info = "{\"place\":\"" + row[8] + "\", \"province\":\"" + row[10] + "\", \"lat\":" + row[11] + ", \"long\":" + row[12] + "}"
             places.append(place_info)
 
     with open(OUTPUT_JS, 'wb') as output_file:

@@ -1,3 +1,6 @@
+var current_year = 2010;
+var year = current_year - 2000;
+
 var g = d3.select("svg").append("svg").attr("id", "circles")
 
 var mapWidth = 612;
@@ -24,18 +27,6 @@ function convertGeoToPixel(latitude, longitude)
     return { "x": x , "y": y};
 }
 
-g.selectAll("g")
-		.data(places)
-	.enter()
-		.append("circle")
-		.attr("id", function(d) {return d.place;})
-		.attr("r",2)
-		.attr("cx", function(d) {return convertGeoToPixel(d.lat,d.long).x;})
-		.attr("cy", function(d) {return convertGeoToPixel(d.lat,d.long).y;});
-
-var current_year = 2000;
-var year = current_year - 2000;
-
 var festivaldata = [];
 
 for (var i = 0; i < 12; i = i + 1) {
@@ -44,7 +35,39 @@ for (var i = 0; i < 12; i = i + 1) {
 
 console.log(festivaldata)
 
-bardata = d3.values(festivals_total[year])[0].map(function(d) { return {
+festivaldata = d3.nest()
+		.key(function(d) { return d.place; })
+		.entries(festivaldata);
+
+console.log(festivaldata)
+
+
+festivaldata = festivaldata.map(function(d) {
+		if (places.filter(x => x.place === d.key)[0] == undefined) {
+				console.log(d.key)
+		};
+		return {
+			  place: d.key,
+				festivals: d.values.map(function(a) { return {name: a.name};}),
+				lat: places.filter(x => x.place === d.key)[0].lat,
+				long: places.filter(x => x.place === d.key)[0].long
+		};
+
+});
+
+console.log(festivaldata)
+
+g.selectAll("g")
+		.data(festivaldata)
+	.enter()
+		.append("circle")
+		.attr("id", function(d) {return d.place;})
+		.attr("r", function(d) {return d.festivals.length;})
+		.attr("cx", function(d) {return convertGeoToPixel(d.lat, d.long).x;})
+		.attr("cy", function(d) {return convertGeoToPixel(d.lat, d.long).y;});
+
+
+var bardata = d3.values(festivals_total[year])[0].map(function(d) { return {
 			  month: d3.keys(d)[0],
 				festivals: d3.values(d)[0].length
 		};

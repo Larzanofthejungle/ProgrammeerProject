@@ -1,12 +1,13 @@
-circle {fill: green; z-index: 2;}
-#container {height: 770px; width:1300px; font-size: 0;}
+#container {height: 750px; width:1450px; font-size: 0;}
+#circle {fill: green; fill-opacity: 0.3;}
 #map, #charts, #barchart, #parallel, #selections, #piechart {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px;}
 #map {height: 750px; width: 650px; z-index: 1; background: url(nederland.svg) no-repeat top left; background-size: contain;}
-#charts {height: 750px; width: 650px;}
+#charts {height: 750px; width: 800px;}
 #barchart {height: 375px; width: 800px;}
-#parallel {height: 375px; width: 800px;}
-#selections {height: 375px; width: 400px;}
-#piechart {height: 375px; width: 400px;}
+#parallel {height: 275px; width: 800px;}
+#slider {height: 100px; width: 800px;}
+#piechart {height: 275px; width: 400px;}
+#selections {height: 250px; width: 250px;}
 .axis text {font: 10px sans-serif;}
 .axis path, .axis line {fill: none; stroke: #000; shape-rendering: crispEdges;}
 .bar {fill: blue;}

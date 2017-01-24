@@ -26,7 +26,7 @@ Voor het toevoegen van de data voor de coordinaten van plaatsen:
 ## Data Visualisatie
 
 * D3 plugin
-  * Slider (d3-drag) (https://gist.github.com/mbostock/6452972)
+  * Slider (d3-slider) (https://github.com/sujeetsr/d3.slider)
   * Play button (http://bl.ocks.org/darrenjaworski/5544599) en misschien (http://bl.ocks.org/mbostock/3081153)
   * Cirkeldiagram (https://bl.ocks.org/mbostock/3887235) of (https://bl.ocks.org/cflavs/ff1c6005fd7edad32641)
   * Staafdiagram (https://bl.ocks.org/mbostock/3885304)

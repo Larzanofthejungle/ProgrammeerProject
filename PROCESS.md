@@ -39,3 +39,9 @@ Verder is de kolomdiagram ook geimplementeerd en laat al de juiste data zien van
 ## dag 4
 
 Posities van festivals worden juist weergegeven van de jaren 2000 tot en met 2013. Idee om te werken met een schaal voor de grootte van het stipje van een plaats, zodat plekken met weinig festivals wel zichtbaar zijn. En de plekken met veel niet uiterst groot worden. Hier kan ook nog gewerkt worden met transparantie.
+
+# week 3
+
+## dag 1
+
+Posities van festivals worden juist weergegeven van alle jaren. Transparantie van cirkels is toegepast. Piechart en slider geimplementeerd. Piechart moet hierbij nog qua style netter en overzichtelijker (en vrolijker). Volgende stap: Extra informatie voor festivals en tips voor de bar- en piechart.

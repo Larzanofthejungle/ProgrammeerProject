@@ -44,4 +44,8 @@ Posities van festivals worden juist weergegeven van de jaren 2000 tot en met 201
 
 ## dag 1
 
-Posities van festivals worden juist weergegeven van alle jaren. Transparantie van cirkels is toegepast. Piechart en slider geimplementeerd. Piechart moet hierbij nog qua style netter en overzichtelijker (en vrolijker). Volgende stap: Extra informatie voor festivals en tips voor de bar- en piechart.
+Posities van festivals worden juist weergegeven van alle jaren. Transparantie van cirkels is toegepast. Piechart en slider geimplementeerd. Piechart moet hierbij nog qua style netter en overzichtelijker (en vrolijker).
+
+## dag 2
+
+Er kan nu selecties gemaakt worden. Oftewel bij de barchart kan er geswitcht worden tussen maanden en provincies. En bij de piechart tussen duur festival en of het festival een camping heeft of uitverkocht is. Volgende stap: Extra informatie voor festivals en interactie voor de bar- en piechart.

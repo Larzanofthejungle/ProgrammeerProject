@@ -26,7 +26,19 @@
             <div id="slider"></div>
             <div id="parallel">
                 <svg id="piechart"></svg>
-                <div id="selections"></div>
+                <div id="selections">
+                    <form name="barSortForm" action="">
+                        <text>Sort Festivals per:<br>
+                        <input type="radio" name="barSortRad" value="months"> Month<br>
+                        <input type="radio" name="barSortRad" value="provinces"> Province
+                    </form>
+                    <form name="pieCatForm" action="">
+                        <text>Categorize Festivals by:<br>
+                        <input type="radio" name="pieCatRad" value="duration"> Duration<br>
+                        <input type="radio" name="pieCatRad" value="camping"> Camping<br>
+                        <input type="radio" name="pieCatRad" value="sold_out"> Sold-Out
+                    </form>
+                </div>
             </div>
         </div>
     </div>

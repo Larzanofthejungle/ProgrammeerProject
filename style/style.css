@@ -1,6 +1,14 @@
+#placetip {position: absolute; text-align: center; width: 130px; height: 30px;
+    padding: 2px; font: 12px sans-serif; background: lightsteelblue; border: 0px;
+    border-radius: 8px; pointer-events: none;}
+#festivaltip {position: absolute; text-align: center; width: 300px; height: 300px;
+    padding: 2px; font: 12px sans-serif; background: lightsteelblue; border: 0px;
+    border-radius: 8px; overflow-y: auto; z-index: 1;}
 #container {height: 750px; width:1450px; font-size: 0;}
-#circle {fill: green; fill-opacity: 0.3;}
-#map, #charts, #barchart, #parallel, #selections, #piechart {display: inline-block; *display: inline; zoom: 1; vertical-align: top; font-size: 12px;}
+#circle {fill: green; fill-opacity: 0.4;}
+#circle:hover {fill: orange; fill-opacity: 0.4;}
+#map, #charts, #barchart, #parallel, #selections, #piechart {display: inline-block;
+    *display: inline; zoom: 1; vertical-align: top; font-size: 12px;}
 #map {height: 750px; width: 650px; z-index: 1; background: url(nederland.svg) no-repeat top left; background-size: contain;}
 #charts {height: 750px; width: 800px;}
 #barchart {height: 375px; width: 800px;}

@@ -48,4 +48,8 @@ Posities van festivals worden juist weergegeven van alle jaren. Transparantie va
 
 ## dag 2
 
-Er kan nu selecties gemaakt worden. Oftewel bij de barchart kan er geswitcht worden tussen maanden en provincies. En bij de piechart tussen duur festival en of het festival een camping heeft of uitverkocht is. Volgende stap: Extra informatie voor festivals en interactie voor de bar- en piechart.
+Er kunnen nu selecties gemaakt worden. Oftewel bij de barchart kan er geswitcht worden tussen maanden en provincies. En bij de piechart tussen duur festival en of het festival een camping heeft of uitverkocht is. Volgende stap: Extra informatie voor festivals en interactie voor de bar- en piechart.
+
+## dag 3
+
+Interactie is toegevoegd aan de plaatsen. Bij hoveren laat het het aantal festivals zien per plaats. Bij klikken een lijst van alle festivals die er zijn geweest op die plek.

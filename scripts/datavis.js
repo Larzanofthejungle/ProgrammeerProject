@@ -3,6 +3,7 @@ var year = current_year - 2000;
 var festivaldata, placedata, bardata, piedata = [];
 var barSelection = "months";
 var pieSelection = "duration";
+var hidefesttip = true;
 
 
 // http://stackoverflow.com/questions/2103924/mercator-longitude-and-latitude-calculations-to-x-and-y-on-a-cropped-map-of-the
@@ -54,6 +55,12 @@ function updateData()
 
     });
 
+    placedata = placedata.sort(function(x, y){
+        return d3.descending(x.festivals.length, y.festivals.length);
+    });
+
+    console.log(placedata);
+
     if (barSelection == "months"){
         bardata = d3.values(festivals_total[year])[0].map(function(d) { return {
         			  month: d3.keys(d)[0],
@@ -66,6 +73,7 @@ function updateData()
     {
         bardata = d3.nest()
             .key(function(d) { return d.province; })
+            .rollup(function(v) { return d3.sum(v, function(d) { return d.festivals.length; }); })
             .entries(placedata);
 
         console.log(bardata)
@@ -73,7 +81,7 @@ function updateData()
         bardata = bardata.map(function(d) {
             return {
                 province: d.key,
-                festivals: d.values.length
+                festivals: d.values
             };
         });
     }
@@ -126,26 +134,51 @@ function placeFestivals()
     // verwijdert de oude piechart
     d3.selectAll("svg#circles").remove();
 
-    var g = d3.select("svg").append("svg").attr("id", "circles")
+    var circle = d3.select("svg").append("svg").attr("id", "circles")
 
-    var circlescale = d3.scale.linear().range([4, 150])
+    var circlescale = d3.scale.linear().range([5, 150])
     		.domain([1, 250])
 
-    g.selectAll("g")
+    circle.selectAll("g")
     		.data(placedata)
     	.enter()
     		.append("circle")
     		.attr("id", "circle")
     		.attr("r", function(d) {return circlescale(d.festivals.length);})
     		.attr("cx", function(d) {return convertGeoToPixel(d.lat, d.long).x;})
-    		.attr("cy", function(d) {return convertGeoToPixel(d.lat, d.long).y;});
+    		.attr("cy", function(d) {return convertGeoToPixel(d.lat, d.long).y;})
+        .on("click", function(d) {
+            hidefesttip = false;
+            var festivalhtml = "Festivals in " + d.place + " in " + current_year + ":<br/>";
+            for(var i = 0; i < d.festivals.length; i++) {
+                festivalhtml += "<br/>" + d.festivals[i].name ;
+            }
+            console.log(festivalhtml);
+            festivaltip.transition()
+                .duration(200)
+                .style("opacity", .9)
+                .style("z-index", 1);
+            festivaltip.html(festivalhtml)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 50) + "px");
+        })
+        .on("mouseover", function(d) {
+            placetip.transition()
+                .duration(200)
+                .style("opacity", .9);
+            placetip.html(d.place + "<br/> Festivals:" + d.festivals.length)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 50) + "px");
+        })
+        .on("mouseout", function(d) {
+            placetip.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
 }
 
 function makeBarChart()
 {
-    console.log(bardata)
-    console.log(barSelection)
-
     d3.select("svg#barchart").selectAll("g").remove();
 
     var margin = {top: 20, right: 0, bottom: 50, left: 50},
@@ -294,7 +327,7 @@ var slider = d3.slider().min(2000).max(2016)
 d3.select('#slider').call(slider);
 
 var barRad = document.barSortForm.barSortRad;
-var barPrev = null;
+var barPrev = "months";
 for(var i = 0; i < barRad.length; i++) {
     barRad[i].onclick = function() {
         if(this !== barPrev) {
@@ -307,19 +340,52 @@ for(var i = 0; i < barRad.length; i++) {
 }
 
 var pieRad = document.pieCatForm.pieCatRad;
-var piePrev = null;
+var piePrev = "duration";
 for(var i = 0; i < pieRad.length; i++) {
     pieRad[i].onclick = function() {
         if(this !== piePrev) {
             piePrev = this;
+            pieSelection = this.value;
+            updateData();
+            makePieChart();
         }
-        pieSelection = this.value;
-        updateData();
-        makePieChart();
+
     };
 }
+
+var placetip = d3.select("body").append("div")
+    .attr("id", "placetip")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+var festivaltip = d3.select("body").append("div")
+    .attr("id", "festivaltip")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+document.body.addEventListener('click', function(){
+  if (hidefesttip == false) {
+      hidefesttip = true;
+  }
+  else {
+      console.log('clicked outer div...');
+      festivaltip.transition()
+          .duration(500)
+          .style("opacity", 0)
+          .style("z-index", -1);
+
+  }
+
+});
 
 updateData();
 placeFestivals();
 makeBarChart();
 makePieChart();
+
+
+
+document.getElementById('festivaltip').addEventListener('click', function(e){
+  e.stopPropagation()
+  console.log('clicked inner div...');
+});

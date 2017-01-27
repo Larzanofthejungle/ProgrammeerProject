@@ -4,7 +4,7 @@ var festivaldata, placedata, bardata, piedata = [];
 var barSelection = "months";
 var pieSelection = "duration";
 var hidefesttip = true;
-
+var festtipheight = null;
 
 // http://stackoverflow.com/questions/2103924/mercator-longitude-and-latitude-calculations-to-x-and-y-on-a-cropped-map-of-the
 function convertGeoToPixel(latitude, longitude)
@@ -42,9 +42,6 @@ function updateData()
         .entries(festivaldata);
 
     placedata = placedata.map(function(d) {
-        if (places.filter(x => x.place === d.key)[0] == undefined) {
-            console.log(d.key)
-        };
         return {
             place: d.key,
             festivals: d.values.map(function(a) { return {name: a.name};}),
@@ -58,8 +55,6 @@ function updateData()
     placedata = placedata.sort(function(x, y){
         return d3.descending(x.festivals.length, y.festivals.length);
     });
-
-    console.log(placedata);
 
     if (barSelection == "months"){
         bardata = d3.values(festivals_total[year])[0].map(function(d) { return {
@@ -75,8 +70,6 @@ function updateData()
             .key(function(d) { return d.province; })
             .rollup(function(v) { return d3.sum(v, function(d) { return d.festivals.length; }); })
             .entries(placedata);
-
-        console.log(bardata)
 
         bardata = bardata.map(function(d) {
             return {
@@ -94,7 +87,7 @@ function updateData()
 
         piedata = piedata.map(function(d) {
         		return {
-        			  duration: d.key,
+        			  category: d.key,
         				amount: d.values.length
         		};
         });
@@ -108,7 +101,7 @@ function updateData()
 
         piedata = piedata.map(function(d) {
         		return {
-        			  duration: d.key,
+        			  category: d.key,
         				amount: d.values.length
         		};
         });
@@ -122,11 +115,16 @@ function updateData()
 
         piedata = piedata.map(function(d) {
         		return {
-        			  duration: d.key,
+        			  category: d.key,
         				amount: d.values.length
         		};
         });
     }
+
+    piedata = piedata.sort(function(x, y){
+        return d3.ascending(x.category[0], y.category[0]);
+    });
+    console.log(piedata)
 }
 
 function placeFestivals()
@@ -153,14 +151,31 @@ function placeFestivals()
             for(var i = 0; i < d.festivals.length; i++) {
                 festivalhtml += "<br/>" + d.festivals[i].name ;
             }
-            console.log(festivalhtml);
+
             festivaltip.transition()
-                .duration(200)
+                .duration(400)
                 .style("opacity", .9)
-                .style("z-index", 1);
+                .style("z-index", 1)
+                .style("height", function(a) {
+                    if (((d.festivals.length * 16) + 32)>= 300){
+                        festtipheight = 300;
+                        return "300px";
+                    }
+                    else {
+                        festtipheight = ((d.festivals.length * 16) + 32);
+                    };
+                    return festtipheight + "px"
+                });
             festivaltip.html(festivalhtml)
                 .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 50) + "px");
+                .style("top", function(a) {
+                    if ((d3.event.pageY -50) >= 550){
+                        return (d3.event.pageY - festtipheight + 50)  + "px";
+                    }
+                    else {
+                        return ((d3.event.pageY) + "px");
+                    };
+                });
         })
         .on("mouseover", function(d) {
             placetip.transition()
@@ -278,9 +293,12 @@ function makePieChart()
         height = 275,
         radius = Math.min(width, height) / 2;
 
+    var color = d3.scale.ordinal()
+        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
     var arc = d3.svg.arc()
         .outerRadius(radius)
-        .innerRadius(0);
+        .innerRadius(50);
 
     var labelArc = d3.svg.arc()
         .outerRadius(radius - 40)
@@ -301,18 +319,20 @@ function makePieChart()
         .attr("class", "arc");
 
     arcs.append("path")
-        .attr("class", function(d) { return d.duration; })
+        .attr("class", function(d) { return d.category; })
         .attr("d", arc)
+        .style("fill", function(d) { return color(d.data.category); });
 
     arcs.append("text")
         .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
         .attr("dy", ".35em")
-        .text(function(d) { return d.duration; });
+        .text(function(d) { return d.data.category; });
 }
 
 var slider = d3.slider().min(2000).max(2016)
     .tickValues([2000,2004,2008,2012,2016])
     .stepValues([2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016])
+    .tickFormat(d3.format('d'))
     .callback(function(evt) {
         if (self.slider.value() != current_year) {
           current_year = self.slider.value();
@@ -363,17 +383,20 @@ var festivaltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+var pietip = d3.select("body").append("div")
+    .attr("id", "pietip")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 document.body.addEventListener('click', function(){
   if (hidefesttip == false) {
       hidefesttip = true;
   }
   else {
-      console.log('clicked outer div...');
       festivaltip.transition()
           .duration(500)
           .style("opacity", 0)
           .style("z-index", -1);
-
   }
 
 });
@@ -383,9 +406,6 @@ placeFestivals();
 makeBarChart();
 makePieChart();
 
-
-
 document.getElementById('festivaltip').addEventListener('click', function(e){
-  e.stopPropagation()
-  console.log('clicked inner div...');
+  e.stopPropagation();
 });

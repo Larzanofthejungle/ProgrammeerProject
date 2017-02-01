@@ -56,6 +56,8 @@ Interactie is toegevoegd aan de plaatsen. Bij hoveren laat het het aantal festiv
 
 ## dag 4
 
+Data gecomplementeerd.
+
 # week 4
 
 ## dag 1

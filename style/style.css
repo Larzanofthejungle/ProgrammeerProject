@@ -18,5 +18,5 @@
 #selections {height: 250px; width: 250px;}
 .axis text {font: 10px sans-serif;}
 .axis path, .axis line {fill: none; stroke: #000; shape-rendering: crispEdges;}
-.bar {fill: blue;}
+.bar {fill: blue; stroke: black; stroke-width: 0px;}
 .bar:hover {fill: red;}

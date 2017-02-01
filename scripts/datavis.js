@@ -5,6 +5,9 @@ var barSelection = "months";
 var pieSelection = "duration";
 var hidefesttip = true;
 var festtipheight = null;
+var festSelected = false;
+var festSelection = null;
+var prev_sel = null;
 
 // http://stackoverflow.com/questions/2103924/mercator-longitude-and-latitude-calculations-to-x-and-y-on-a-cropped-map-of-the
 function convertGeoToPixel(latitude, longitude)
@@ -44,7 +47,7 @@ function updateData()
     placedata = placedata.map(function(d) {
         return {
             place: d.key,
-            festivals: d.values.map(function(a) { return {name: a.name};}),
+            festivals: d.values.map(function(a) { return {name: a.name, camping: a.camping, duration: a.duration, sold_out: a.sold_out};}),
             province: places.filter(x => x.place === d.key)[0].province,
             lat: places.filter(x => x.place === d.key)[0].lat,
             long: places.filter(x => x.place === d.key)[0].long
@@ -79,52 +82,64 @@ function updateData()
         });
     }
 
-    if (pieSelection == "duration"){
+    if (!festSelected) {
 
         piedata = d3.nest()
-        		.key(function(d) { return d.duration; })
-        		.entries(festivaldata);
+            .key(function(d) { return d[pieSelection]; })
+            .entries(festivaldata);
 
-        piedata = piedata.map(function(d) {
-        		return {
-        			  category: d.key,
-        				amount: d.values.length
-        		};
-        });
     }
 
-    if (pieSelection == "camping"){
+    else {
+        if (!isNaN(festSelection)){
 
-        piedata = d3.nest()
-        		.key(function(d) { return d.camping; })
-        		.entries(festivaldata);
+            piedata = d3.nest()
+                .key(function(d) { return d[pieSelection]; })
+                .entries(festivals_total[year][current_year][festSelection][festSelection]);
 
-        piedata = piedata.map(function(d) {
-        		return {
-        			  category: d.key,
-        				amount: d.values.length
-        		};
-        });
+        }
+        else {
+
+            console.log(placedata);
+            console.log(festSelection);
+
+            piedata = d3.nest()
+                .key(function(d) { return d.province; })
+                .entries(placedata);
+
+            piedata = piedata.filter(x => x.key === festSelection)[0].values
+
+            console.log(piedata);
+
+            var piegood = [];
+
+            for (var i = 0; i < piedata.length; i = i + 1) {
+                piegood = piegood.concat(piedata[i].festivals);
+            };
+
+            console.log(piegood);
+
+            piedata = d3.nest()
+                .key(function(d) { return d[pieSelection]; })
+                .entries(piegood);
+
+            console.log(piedata);
+        }
     }
 
-    if (pieSelection == "sold_out"){
 
-        piedata = d3.nest()
-        		.key(function(d) { return d.sold_out; })
-        		.entries(festivaldata);
 
-        piedata = piedata.map(function(d) {
-        		return {
-        			  category: d.key,
-        				amount: d.values.length
-        		};
-        });
-    }
+    piedata = piedata.map(function(d) {
+    		return {
+    			  category: d.key,
+    				amount: d.values.length
+    		};
+    });
 
     piedata = piedata.sort(function(x, y){
         return d3.ascending(x.category[0], y.category[0]);
     });
-    console.log(piedata)
+
 }
 
 function placeFestivals()
@@ -266,7 +281,26 @@ function makeBarChart()
             .attr("x", function(d) { return x(new Date(2012, d.month, 1)) + barMargin; })
             .attr("y", function(d) { return y(d.festivals); })
             .attr("height", function(d) { return height - y(d.festivals); })
-            .attr("width", barWidth - (2 * barMargin));
+            .attr("width", barWidth - (2 * barMargin))
+            .on("click", function(d) {
+                if ((festSelected) && (festSelection == d.month)){
+                    d3.select(this).style("stroke-width", "0px");
+                    festSelected = false;
+                    updateData();
+                    makePieChart();
+                } else {
+                    if (prev_sel != null)
+                    {
+                        prev_sel.style("stroke-width", "0px");
+                    }
+                    d3.select(this).style("stroke-width", "3px");
+                    prev_sel = d3.select(this);
+                    festSelected = true;
+                    festSelection = d.month;
+                    updateData();
+                    makePieChart();
+                }
+            });
     }
 
     if (barSelection == "provinces"){
@@ -277,7 +311,26 @@ function makeBarChart()
         		.attr("x", function(d) { return x(d.province) + barMargin; })
         		.attr("y", function(d) { return y(d.festivals); })
         		.attr("height", function(d) { return height - y(d.festivals); })
-        		.attr("width", barWidth - (2 * barMargin));
+        		.attr("width", barWidth - (2 * barMargin))
+            .on("click", function(d) {
+                if ((festSelected) && (festSelection == d.province)){
+                    d3.select(this).style("stroke-width", "0px");
+                    festSelected = false;
+                    updateData();
+                    makePieChart();
+                } else {
+                    if (prev_sel != null)
+                    {
+                        prev_sel.style("stroke-width", "0px");
+                    }
+                    d3.select(this).style("stroke-width", "3px");
+                    prev_sel = d3.select(this);
+                    festSelected = true;
+                    festSelection = d.province;
+                    updateData();
+                    makePieChart();
+                }
+            });
     }
 
 
@@ -337,6 +390,7 @@ var slider = d3.slider().min(2000).max(2016)
         if (self.slider.value() != current_year) {
           current_year = self.slider.value();
           year = current_year - 2000;
+          festSelected = false;
           updateData();
           placeFestivals();
           makeBarChart();

@@ -1,22 +1,23 @@
-#placetip {position: absolute; text-align: center; width: 130px; height: 30px;
+h1 {font-family: sans-serif; padding-left: 420px;}
+#tooltip {position: absolute; text-align: center; width: 130px; height: 30px;
     padding: 2px; font: 12px sans-serif; background: lightsteelblue; border: 0px;
     border-radius: 8px; pointer-events: none;}
-#festivaltip {position: absolute; text-align: center; width: 300px; height: 300px;
+#festivaltip {position: absolute; text-align: center; width: 300px; height: 0px;
     padding: 2px; font: 12px sans-serif; background: lightsteelblue; border: 0px;
     border-radius: 8px; overflow-y: auto; z-index: 1;}
-#container {height: 750px; width:1450px; font-size: 0;}
-#circle {fill: green; fill-opacity: 0.4;}
-#circle:hover {fill: orange; fill-opacity: 0.4;}
+#container {height: 725px; width:1450px; font-size: 0;}
+#circle {fill: green; fill-opacity: 0.5;}
+#circle:hover {fill: #f5132b; fill-opacity: 0.5;}
 #map, #charts, #barchart, #parallel, #selections, #piechart {display: inline-block;
     *display: inline; zoom: 1; vertical-align: top; font-size: 12px;}
-#map {height: 750px; width: 650px; z-index: 1; background: url(nederland.svg) no-repeat top left; background-size: contain;}
-#charts {height: 750px; width: 800px;}
+#map {height: 725px; width: 650px; z-index: 1; background: url(nederland.svg) no-repeat top left; background-size: contain;}
+#charts {height: 725px; width: 800px;}
 #barchart {height: 375px; width: 800px;}
-#parallel {height: 275px; width: 800px;}
-#slider {height: 100px; width: 800px;}
-#piechart {height: 275px; width: 400px;}
-#selections {height: 250px; width: 250px;}
+#parallel {height: 250px; width: 800px;}
+#slider {height: 100px; width: 800px; padding-left: 30px;}
+#piechart {height: 250px; width: 400px; font-family: sans-serif;}
+#selections {height: 200px; width: 250px; font: 12px sans-serif; padding-top: 25px; padding-left: 50px;}
 .axis text {font: 10px sans-serif;}
 .axis path, .axis line {fill: none; stroke: #000; shape-rendering: crispEdges;}
-.bar {fill: blue; stroke: black; stroke-width: 0px;}
+.bar {fill: green; fill-opacity: 0.5; stroke: black; stroke-width: 0px;}
 .bar:hover {fill: red;}

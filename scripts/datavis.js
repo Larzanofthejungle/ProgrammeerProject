@@ -8,204 +8,8 @@ var festtipheight = null;
 var festSelected = false;
 var festSelection = null;
 var prev_sel = null;
-
-// http://stackoverflow.com/questions/2103924/mercator-longitude-and-latitude-calculations-to-x-and-y-on-a-cropped-map-of-the
-function convertGeoToPixel(latitude, longitude)
-{
-    var mapWidth = 612;
-    var mapHeight = 724;
-
-    var mapLonLeft = 3.359403;
-    var mapLonRight = 7.227496;
-    var mapLonDelta = mapLonRight - mapLonLeft;
-
-    var mapLatBottom = 50.750938;
-    var mapLatBottomDegree = mapLatBottom * Math.PI / 180;
-
-    var x = (longitude - mapLonLeft) * (mapWidth / mapLonDelta);
-
-    latitude = latitude * Math.PI / 180;
-    var worldMapWidth = ((mapWidth / mapLonDelta) * 360) / (2 * Math.PI);
-    var mapOffsetY = (worldMapWidth / 2 * Math.log((1 + Math.sin(mapLatBottomDegree)) / (1 - Math.sin(mapLatBottomDegree))));
-    var y = mapHeight - ((worldMapWidth / 2 * Math.log((1 + Math.sin(latitude)) / (1 - Math.sin(latitude)))) - mapOffsetY);
-
-    return { "x": x , "y": y};
-}
-
-function updateData()
-{
-    festivaldata = [];
-
-    for (var i = 0; i < 12; i = i + 1) {
-        festivaldata = festivaldata.concat(festivals_total[year][current_year][i][i]);
-    };
-
-    placedata = d3.nest()
-        .key(function(d) { return d.place; })
-        .entries(festivaldata);
-
-    placedata = placedata.map(function(d) {
-        return {
-            place: d.key,
-            festivals: d.values.map(function(a) { return {name: a.name, camping: a.camping, duration: a.duration, sold_out: a.sold_out};}),
-            province: places.filter(x => x.place === d.key)[0].province,
-            lat: places.filter(x => x.place === d.key)[0].lat,
-            long: places.filter(x => x.place === d.key)[0].long
-        };
-
-    });
-
-    placedata = placedata.sort(function(x, y){
-        return d3.descending(x.festivals.length, y.festivals.length);
-    });
-
-    if (barSelection == "months"){
-        bardata = d3.values(festivals_total[year])[0].map(function(d) { return {
-        			  month: d3.keys(d)[0],
-        				festivals: d3.values(d)[0].length
-        		};
-        });
-    }
-
-    if (barSelection == "provinces")
-    {
-        bardata = d3.nest()
-            .key(function(d) { return d.province; })
-            .rollup(function(v) { return d3.sum(v, function(d) { return d.festivals.length; }); })
-            .entries(placedata);
-
-        bardata = bardata.map(function(d) {
-            return {
-                province: d.key,
-                festivals: d.values
-            };
-        });
-    }
-
-    if (!festSelected) {
-
-        piedata = d3.nest()
-            .key(function(d) { return d[pieSelection]; })
-            .entries(festivaldata);
-
-    }
-
-    else {
-        if (!isNaN(festSelection)){
-
-            piedata = d3.nest()
-                .key(function(d) { return d[pieSelection]; })
-                .entries(festivals_total[year][current_year][festSelection][festSelection]);
-
-        }
-        else {
-
-            console.log(placedata);
-            console.log(festSelection);
-
-            piedata = d3.nest()
-                .key(function(d) { return d.province; })
-                .entries(placedata);
-
-            piedata = piedata.filter(x => x.key === festSelection)[0].values
-
-            console.log(piedata);
-
-            var piegood = [];
-
-            for (var i = 0; i < piedata.length; i = i + 1) {
-                piegood = piegood.concat(piedata[i].festivals);
-            };
-
-            console.log(piegood);
-
-            piedata = d3.nest()
-                .key(function(d) { return d[pieSelection]; })
-                .entries(piegood);
-
-            console.log(piedata);
-        }
-    }
-
-
-
-    piedata = piedata.map(function(d) {
-    		return {
-    			  category: d.key,
-    				amount: d.values.length
-    		};
-    });
-
-    piedata = piedata.sort(function(x, y){
-        return d3.ascending(x.category[0], y.category[0]);
-    });
-
-}
-
-function placeFestivals()
-{
-    // verwijdert de oude piechart
-    d3.selectAll("svg#circles").remove();
-
-    var circle = d3.select("svg").append("svg").attr("id", "circles")
-
-    var circlescale = d3.scale.linear().range([5, 150])
-    		.domain([1, 250])
-
-    circle.selectAll("g")
-    		.data(placedata)
-    	.enter()
-    		.append("circle")
-    		.attr("id", "circle")
-    		.attr("r", function(d) {return circlescale(d.festivals.length);})
-    		.attr("cx", function(d) {return convertGeoToPixel(d.lat, d.long).x;})
-    		.attr("cy", function(d) {return convertGeoToPixel(d.lat, d.long).y;})
-        .on("click", function(d) {
-            hidefesttip = false;
-            var festivalhtml = "Festivals in " + d.place + " in " + current_year + ":<br/>";
-            for(var i = 0; i < d.festivals.length; i++) {
-                festivalhtml += "<br/>" + d.festivals[i].name ;
-            }
-
-            festivaltip.transition()
-                .duration(400)
-                .style("opacity", .9)
-                .style("z-index", 1)
-                .style("height", function(a) {
-                    if (((d.festivals.length * 16) + 32)>= 300){
-                        festtipheight = 300;
-                        return "300px";
-                    }
-                    else {
-                        festtipheight = ((d.festivals.length * 16) + 32);
-                    };
-                    return festtipheight + "px"
-                });
-            festivaltip.html(festivalhtml)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", function(a) {
-                    if ((d3.event.pageY -50) >= 550){
-                        return (d3.event.pageY - festtipheight + 50)  + "px";
-                    }
-                    else {
-                        return ((d3.event.pageY) + "px");
-                    };
-                });
-        })
-        .on("mouseover", function(d) {
-            placetip.transition()
-                .duration(200)
-                .style("opacity", .9);
-            placetip.html(d.place + "<br/> Festivals:" + d.festivals.length)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 50) + "px");
-        })
-        .on("mouseout", function(d) {
-            placetip.transition()
-                .duration(500)
-                .style("opacity", 0);
-        });
-}
+var provinces = ["Drenthe", "Flevoland", "Friesland", "Gelderland", "Groningen", "Limburg", "N-Brabant", "N-Holland", "Overijssel", "Utrecht", "Zeeland", "Z-Holland", null];
+var months =  ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 function makeBarChart()
 {
@@ -215,7 +19,6 @@ function makeBarChart()
     		width = 800 - margin.left - margin.right,
     		height = 375 - margin.top - margin.bottom,
     		barMargin = 5
-        provinces = ["Drenthe", "Flevoland", "Friesland", "Gelderland", "Groningen", "Limburg", "Noord-Brabant", "Noord-Holland", "Overijssel", "Utrecht", "Zeeland", "Zuid-Holland", null];
 
     var x = null;
     var xAxis = null;
@@ -243,7 +46,6 @@ function makeBarChart()
             .orient("bottom")
             .ticks(places)
             .tickSize(14, 0);
-
     }
 
     var y = d3.scale.linear().range([height, 0])
@@ -272,7 +74,6 @@ function makeBarChart()
     		.attr("class", "y axis")
     		.call(yAxis);
 
-
     if (barSelection == "months"){
         barchart.selectAll(".bar")
             .data(bardata)
@@ -282,6 +83,19 @@ function makeBarChart()
             .attr("y", function(d) { return y(d.festivals); })
             .attr("height", function(d) { return height - y(d.festivals); })
             .attr("width", barWidth - (2 * barMargin))
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(months[d.month] + "<br/> Festivals:" + d.festivals)
+                    .style("left", (d3.event.pageX - 50) + "px")
+                    .style("top", (d3.event.pageY - 50) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
             .on("click", function(d) {
                 if ((festSelected) && (festSelection == d.month)){
                     d3.select(this).style("stroke-width", "0px");
@@ -312,6 +126,19 @@ function makeBarChart()
         		.attr("y", function(d) { return y(d.festivals); })
         		.attr("height", function(d) { return height - y(d.festivals); })
         		.attr("width", barWidth - (2 * barMargin))
+            .on("mouseover", function(d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(d.province + "<br/> Festivals:" + d.festivals)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 50) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
             .on("click", function(d) {
                 if ((festSelected) && (festSelection == d.province)){
                     d3.select(this).style("stroke-width", "0px");
@@ -332,8 +159,6 @@ function makeBarChart()
                 }
             });
     }
-
-
 }
 
 function makePieChart()
@@ -342,16 +167,18 @@ function makePieChart()
     d3.select("svg#piechart").selectAll("g").remove();
 
     // maakt nieuwe piechart aan
-    var width = 400,
-        height = 275,
-        radius = Math.min(width, height) / 2;
+    var width = 255,
+        height = 250,
+        radius = Math.min(width, height) / 2,
+        legendRectSize = 18,
+        legendSpacing = 4;
 
     var color = d3.scale.ordinal()
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+        .range(["#238b45", "#41ae76", "#66c2a4", "#99d8c9"]);
 
     var arc = d3.svg.arc()
         .outerRadius(radius)
-        .innerRadius(50);
+        .innerRadius(75);
 
     var labelArc = d3.svg.arc()
         .outerRadius(radius - 40)
@@ -374,12 +201,44 @@ function makePieChart()
     arcs.append("path")
         .attr("class", function(d) { return d.category; })
         .attr("d", arc)
-        .style("fill", function(d) { return color(d.data.category); });
+        .style("fill", function(d) { return color(d.data.category); })
+        .on("mouseover", function(d) {
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", .9);
+            tooltip.html(d.data.category + "<br/> Festivals:" + d.data.amount)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 50) + "px");
+        })
+        .on("mouseout", function(d) {
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
 
-    arcs.append("text")
-        .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
-        .attr("dy", ".35em")
-        .text(function(d) { return d.data.category; });
+    var legend = piechart.selectAll('.legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+        .attr('class', 'legend')
+        .attr('transform', function(d, i) {
+          var height = legendRectSize + legendSpacing;
+          var offset =  height * color.domain().length / 2;
+          var horz = -2 * legendRectSize;
+          var vert = i * height - offset;
+          return 'translate(' + horz + ',' + vert + ')';
+        });
+
+    legend.append('rect')
+        .attr('width', legendRectSize)
+        .attr('height', legendRectSize)
+        .style('fill', color)
+        .style('stroke', color);
+
+    legend.append('text')
+        .attr('x', legendRectSize + legendSpacing)
+        .attr('y', legendRectSize - legendSpacing)
+        .text(function(d) { return d; });
 }
 
 var slider = d3.slider().min(2000).max(2016)
@@ -395,6 +254,10 @@ var slider = d3.slider().min(2000).max(2016)
           placeFestivals();
           makeBarChart();
           makePieChart();
+          festivaltip.transition()
+              .duration(500)
+              .style("opacity", 0)
+              .style("z-index", -1);
         }
     });
 
@@ -427,18 +290,13 @@ for(var i = 0; i < pieRad.length; i++) {
     };
 }
 
-var placetip = d3.select("body").append("div")
-    .attr("id", "placetip")
+var tooltip = d3.select("body").append("div")
+    .attr("id", "tooltip")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
 var festivaltip = d3.select("body").append("div")
     .attr("id", "festivaltip")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-
-var pietip = d3.select("body").append("div")
-    .attr("id", "pietip")
     .attr("class", "tooltip")
     .style("opacity", 0);
 

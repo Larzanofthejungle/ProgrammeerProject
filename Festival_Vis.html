@@ -16,7 +16,7 @@
   <body>
 
     <h1>
-        Toename aantal festivals in Nederland
+        Increase in amount of festivals in the Netherlands
     </h1>
 
     <div id="container">
@@ -25,13 +25,13 @@
             <svg id="barchart"></svg>
             <div id="slider"></div>
             <div id="parallel">
-                <svg id="piechart"></svg>
                 <div id="selections">
                     <form name="barSortForm" action="">
                         <text>Sort Festivals per:</text><br>
                         <input type="radio" name="barSortRad" value="months" checked> Month<br>
                         <input type="radio" name="barSortRad" value="provinces"> Province
                     </form>
+                    <br>
                     <form name="pieCatForm" action="">
                         <text>Categorize Festivals by:</text><br>
                         <input type="radio" name="pieCatRad" value="duration" checked> Duration<br>
@@ -39,6 +39,7 @@
                         <input type="radio" name="pieCatRad" value="sold_out"> Sold-Out
                     </form>
                 </div>
+                <svg id="piechart"></svg>
             </div>
         </div>
     </div>
@@ -50,6 +51,8 @@
     <script src="scripts/d3.slider.js"></script>
     <script src="scripts/festivals.js"></script>
     <script src="scripts/places.js"></script>
+    <script src="scripts/update.js"></script>
+    <script src="scripts/mapplacing.js"></script>
     <script src="scripts/datavis.js"></script>
 
   </body>

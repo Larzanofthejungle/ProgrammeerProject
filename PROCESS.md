@@ -67,3 +67,7 @@ Tijd om code op te schonen en pagina mooi te stylen.
 ## dag 2
 
 Interactie barchat geimplementeerd, morgen perfectioneren. Verdere code ook opschonen. En morgen ook overal commenten.
+
+## dag 3
+
+Pagina gestyld, nog kijken of alles mooi meegeschaald kan worden aan de pagina. Ook nog een begin pop-up laten zien met verhaal (makkelijk te doen). Morgen commenten en verder opschonen. 

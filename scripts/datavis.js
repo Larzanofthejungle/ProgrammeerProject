@@ -321,3 +321,9 @@ makePieChart();
 document.getElementById('festivaltip').addEventListener('click', function(e){
   e.stopPropagation();
 });
+
+var infotip = d3.select("body").append("div")
+    .attr("id", "infotip")
+    .attr("class", "tooltip")
+    .style("left", "50px")
+    .style("top", "50px");

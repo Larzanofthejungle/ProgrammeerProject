@@ -53,3 +53,15 @@ Er kunnen nu selecties gemaakt worden. Oftewel bij de barchart kan er geswitcht 
 ## dag 3
 
 Interactie is toegevoegd aan de plaatsen. Bij hoveren laat het het aantal festivals zien per plaats. Bij klikken een lijst van alle festivals die er zijn geweest op die plek.
+
+## dag 4
+
+# week 4
+
+## dag 1
+
+Tijd om code op te schonen en pagina mooi te stylen.
+
+## dag 2
+
+Interactie barchat geimplementeerd, morgen perfectioneren. Verdere code ook opschonen. En morgen ook overal commenten.

@@ -1,3 +1,9 @@
+/*
+  Lars Overwater
+  10800077
+  ProgrammeerProject
+*/
+
 h1 {font-family: sans-serif; padding-left: 470px; margin-top: -5px;}
 #tooltip {position: absolute; text-align: center; width: 130px; height: 30px;
     padding: 2px; font: 12px sans-serif; background: lightsteelblue; border: 0px;
@@ -5,10 +11,9 @@ h1 {font-family: sans-serif; padding-left: 470px; margin-top: -5px;}
 #festivaltip {position: absolute; text-align: center; width: 300px; height: 0px;
     padding: 2px; font: 12px sans-serif; background: lightsteelblue; border: 0px;
     border-radius: 8px; overflow-y: auto; z-index: 1;}
-#infotip {position: absolute; text-align: center; width: 1680px; height: 740px;
-    padding: 2px; font: 12px sans-serif; background-image: url("info.gif");
-    opacity: 0.7; border: 0px; border-radius: 8px;
-    overflow-y: auto; z-index: 5;}
+#infotip {position: absolute; width: 1680px; height: 740px; padding: 2px;
+    background-image: url("info.gif"); opacity: 0; border: 0px;
+    border-radius: 8px; z-index: -2;}
 #container {height: 725px; width:1450px; font-size: 0; margin-top: -5px;}
 #circle {fill: green; fill-opacity: 0.5;}
 #circle:hover {fill: #f5132b; fill-opacity: 0.5;}

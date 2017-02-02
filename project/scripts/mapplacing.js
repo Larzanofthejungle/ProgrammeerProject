@@ -1,3 +1,10 @@
+/*
+  Lars Overwater
+  10800077
+  ProgrammeerProject
+*/
+
+// changes longitude and latitude values to x and y values on the map
 // http://stackoverflow.com/questions/2103924/mercator-longitude-and-latitude-calculations-to-x-and-y-on-a-cropped-map-of-the
 function convertGeoToPixel(latitude, longitude)
 {
@@ -21,16 +28,20 @@ function convertGeoToPixel(latitude, longitude)
     return { "x": x , "y": y};
 }
 
+// places all places with festivals on the map
 function placeFestivals()
 {
-    // verwijdert de oude piechart
+    // removes all old circles
     d3.selectAll("svg#circles").remove();
 
+    // appends new svg element
     var circle = d3.select("svg").append("svg").attr("id", "circles")
 
+    // scale for the circle size
     var circlescale = d3.scale.linear().range([5, 150])
     		.domain([1, 250])
 
+    // places all circles
     circle.selectAll("g")
     		.data(placedata)
     	.enter()
@@ -39,6 +50,8 @@ function placeFestivals()
     		.attr("r", function(d) {return circlescale(d.festivals.length);})
     		.attr("cx", function(d) {return convertGeoToPixel(d.lat, d.long).x;})
     		.attr("cy", function(d) {return convertGeoToPixel(d.lat, d.long).y;})
+
+        // shows list of the names of all festivals on click
         .on("click", function(d) {
             hidefesttip = false;
             var festivalhtml = "Festivals in " + d.place + " in " + current_year + ":<br/>";
@@ -46,6 +59,7 @@ function placeFestivals()
                 festivalhtml += "<br/>" + d.festivals[i].name ;
             }
 
+            // shows the festivaltip
             festivaltip.transition()
                 .duration(400)
                 .style("opacity", .9)
@@ -60,6 +74,8 @@ function placeFestivals()
                     };
                     return festtipheight + "px"
                 });
+
+            // scales the festivaltip if the list of names to max 300px
             festivaltip.html(festivalhtml)
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", function(a) {
@@ -71,6 +87,8 @@ function placeFestivals()
                     };
                 });
         })
+
+        // shows tooltip with place and amount on mouseover
         .on("mouseover", function(d) {
             tooltip.transition()
                 .duration(200)
@@ -79,6 +97,8 @@ function placeFestivals()
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 50) + "px");
         })
+
+        // sets tooltip to the background on mouseout
         .on("mouseout", function(d) {
             tooltip.transition()
                 .duration(500)

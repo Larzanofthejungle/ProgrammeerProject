@@ -1,3 +1,9 @@
+/*
+  Lars Overwater
+  10800077
+  ProgrammeerProject
+*/
+
 var places = [{"place":"1e Exloërmond", "province":"Drenthe", "lat":52.91979946, "long":6.91326779},
 	{"place":"2e Exloërmond", "province":"Drenthe", "lat":52.90904759, "long":6.932338977},
 	{"place":"2e Valthermond", "province":"Drenthe", "lat":52.87216431, "long":6.999743388},

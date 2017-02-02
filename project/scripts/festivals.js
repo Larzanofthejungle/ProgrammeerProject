@@ -1,3 +1,9 @@
+/*
+  Lars Overwater
+  10800077
+  ProgrammeerProject
+*/
+
 var festivals_total = [{"2000":[{"0":[{"name":"Straatfestival", "place":"Ovezande", "duration":"1 day", "camping":"No Camping", "sold_out":"Not Sold-Out"},
 			{"name":"Extrema", "place":"Rotterdam", "duration":"1 day", "camping":"No Camping", "sold_out":"Not Sold-Out"},
 			{"name":"Visbakfestival", "place":"Wijk aan Zee", "duration":"1 day", "camping":"Camping", "sold_out":"Not Sold-Out"},

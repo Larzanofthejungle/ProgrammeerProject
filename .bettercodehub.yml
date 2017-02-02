@@ -1,0 +1,4 @@
+exclude:
+- /scrapers/.*
+- places.js
+- festivals.js

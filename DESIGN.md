@@ -22,6 +22,9 @@ Voor het scrapen van de festivalinfo zullen de volgende plugins nodig zijn:
 Voor het toevoegen van de data voor de coordinaten van plaatsen:
 * csv voor het kunnen lezen en aanpassen van csv bestand
 
+## Schets
+
+![](doc/sketch.png)
 
 ## Data Visualisatie
 

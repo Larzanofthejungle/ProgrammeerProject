@@ -70,4 +70,8 @@ Interactie barchat geimplementeerd, morgen perfectioneren. Verdere code ook opsc
 
 ## dag 3
 
-Pagina gestyld, nog kijken of alles mooi meegeschaald kan worden aan de pagina. Ook nog een begin pop-up laten zien met verhaal (makkelijk te doen). Morgen commenten en verder opschonen. 
+Pagina gestyld, nog kijken of alles mooi meegeschaald kan worden aan de pagina. Ook nog een begin pop-up laten zien met verhaal (makkelijk te doen). Morgen commenten en verder opschonen.
+
+## dag 4
+
+Info pop-up toegevoegd.
